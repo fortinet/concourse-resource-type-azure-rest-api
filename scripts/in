@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-var-requires */
+const concourseResource = require('../bin/index');
+// pass the actual argv which are starting from the index 2
+concourseResource.execIn(process.argv);

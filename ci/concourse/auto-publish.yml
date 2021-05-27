@@ -1,0 +1,22 @@
+resources:
+  - name: azure-rest-api-git-resource
+    type: git
+    source:
+      uri: https://github.com/fortinet/concourse-resource-type-azure-rest-api
+      branch: main
+  - name: azure-rest-api-docker-image
+    type: docker-image
+    source:
+      repository: ((registry_domain))/azure-rest-api-resource
+      username: ((registry.username))
+      password: ((registry.password))
+jobs:
+  - name: publish-docker-image
+    plan:
+      # Trigger this job for every new commit
+      - get: azure-rest-api-git-resource
+        version: every
+        trigger: true
+      - put: azure-rest-api-docker-image
+        params:
+          build: azure-rest-api-git-resource
