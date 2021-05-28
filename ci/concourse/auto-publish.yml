@@ -5,7 +5,7 @@ resources:
       uri: https://github.com/fortinet/concourse-resource-type-azure-rest-api
       branch: main
   - name: azure-rest-api-docker-image
-    type: docker-image
+    type: registry-image
     source:
       repository: ((registry_domain))/azure-rest-api-resource
       username: ((registry.username))
@@ -17,6 +17,27 @@ jobs:
       - get: azure-rest-api-git-resource
         version: every
         trigger: true
-      - put: azure-rest-api-docker-image
+
+      - task: build-image
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              # https://github.com/vito/oci-build-task
+              repository: vito/oci-build-task
+              tag: '0.7'
+          params:
+            CONTEXT: azure-rest-api-git-resource
+            DOCKERFILE: azure-rest-api-git-resource/Dockerfile
+          inputs:
+            - name: azure-rest-api-git-resource
+          outputs:
+            - name: image
+          run:
+            path: build
+      - put: azure-rest-api-git-resource
         params:
-          build: azure-rest-api-git-resource
+          image: image/image.tar
+          tags: latest
