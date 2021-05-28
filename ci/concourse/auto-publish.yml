@@ -3,7 +3,7 @@ resources:
     type: git
     source:
       uri: https://github.com/fortinet/concourse-resource-type-azure-rest-api
-      branch: patch_build_using_registry_image
+      branch: main
   - name: azure-rest-api-docker-image
     type: registry-image
     source:
