@@ -3,21 +3,22 @@ resources:
     type: git
     source:
       uri: https://github.com/fortinet/concourse-resource-type-azure-rest-api
-      branch: main
+      branch: patch_build_using_registry_image
   - name: azure-rest-api-docker-image
     type: registry-image
     source:
       repository: ((registry_domain))/azure-rest-api-resource
       username: ((registry.username))
       password: ((registry.password))
+      tag: latest
 jobs:
   - name: publish-docker-image
     plan:
+      - get: azure-rest-api-docker-image
       # Trigger this job for every new commit
       - get: azure-rest-api-git-resource
         version: every
         trigger: true
-
       - task: build-image
         privileged: true
         config:
@@ -37,7 +38,6 @@ jobs:
             - name: image
           run:
             path: build
-      - put: azure-rest-api-git-resource
+      - put: azure-rest-api-docker-image
         params:
           image: image/image.tar
-          tags: latest
