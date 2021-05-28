@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as msRestNodeAuth from '@azure/ms-rest-nodeauth';
 import axios, { AxiosRequestConfig } from 'axios';
