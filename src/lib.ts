@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as msRestNodeAuth from '@azure/ms-rest-nodeauth';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import chalk from 'chalk';
 import crypto from 'crypto';
 import fs from 'fs';
@@ -183,7 +183,11 @@ export async function get(
             rejectUnauthorized: false,
         }), // resolve self signed certificate issue
     };
-    const response = await axios(options);
+    const response = await axios(options).catch((error: AxiosError) => {
+        throw new Error(
+            `${error.code} ERROR. ${error.message}. Error stack: ${error.stack}`
+        );
+    });
     // TODO: remove the comments when the project is complete. Keep them for future debugging.
     // log('response: ', JSON.stringify(response.data));
     return response.data as JSONable;
